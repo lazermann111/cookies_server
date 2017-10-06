@@ -1,0 +1,3 @@
+//todo add token for Retrofit
+//todo add quartz scheduler
+//todo  run locally
