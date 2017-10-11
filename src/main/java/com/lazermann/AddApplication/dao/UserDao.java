@@ -25,6 +25,19 @@ public class UserDao {
         //return;
     }
 
+    public void fillDb() {
+        User c = new User("John", "doe@gmail.com");
+        c.setPointsToday(100);
+        c.setPointsTotal(885);
+        getSession().save(c);
+
+        User u = new User("John", "doe@gmail.com");
+        u.setPointsToday(80);
+        u.setPointsTotal(885);
+        getSession().save(u);
+
+    }
+
     public void delete(User user) {
         getSession().delete(user);
         //return;

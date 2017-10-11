@@ -3,19 +3,18 @@ package com.lazermann.AddApplication.controllers;
 import com.lazermann.AddApplication.dao.UserDao;
 import com.lazermann.AddApplication.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping(value="/user")
 public class UserController {
 
     @Autowired
     private UserDao _userDao;
 
-    @RequestMapping(value="/delete")
-    @ResponseBody
+    @RequestMapping(value="/delete", method = RequestMethod.POST)
     public String delete(long id) {
         try {
             User user = new User(id);
@@ -27,8 +26,7 @@ public class UserController {
         return "User succesfully deleted!";
     }
 
-    @RequestMapping(value="/get-by-email")
-    @ResponseBody
+    @RequestMapping(value="/get-by-email", method = RequestMethod.GET)
     public String getByEmail(String email) {
         String userId;
         try {
@@ -42,7 +40,6 @@ public class UserController {
     }
 
     @RequestMapping(value="/save")
-    @ResponseBody
     public String create(String email, String name) {
         try {
             User user = new User(email, name);
@@ -53,5 +50,17 @@ public class UserController {
         }
         return "User succesfully saved!";
     }
+    @RequestMapping(value="/cheat")
+    public String cheat(String email, String name) {
+        try {
+            User user = new User(email, name);
+            _userDao.fillDb();
+        }
+        catch(Exception ex) {
+            return ex.getMessage();
+        }
+        return "User succesfully saved!";
+    }
+
 
 }
