@@ -1,3 +1,4 @@
+********************************
 App developing:
 1. Go to https://start.spring.io/, packaging - JAR,
    Dependencies - Web, Web Services,  PostgreSQL, MySQL,Quartz Scheduler
@@ -8,5 +9,10 @@ App developing:
 
 
 
-
+********************************
 Deployment to Heroku:
+
+
+********************************
+URIs example
+http://localhost:8081/user/delete?id={id}

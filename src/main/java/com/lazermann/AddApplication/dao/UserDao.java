@@ -43,6 +43,22 @@ public class UserDao {
         //return;
     }
 
+    // suppose to call once a day at 12 AM
+    public void checkUsersPoints()
+    {
+        List<User> all = getAll();
+
+        for (User u : all)
+        {
+            if(u.getPointsToday() < 100)
+            {
+                u.setPointsTotal(u.getPointsTotal() - 100);
+            }
+            u.setPointsToday(0);
+            getSession().update(u);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public List<User> getAll() {
         return getSession().createQuery("from User").list();
