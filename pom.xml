@@ -89,7 +89,7 @@
 				<version>2.0.2</version>
 				<configuration>
 					<processTypes>
-						<web>java $JAVA_OPTS -cp target/classes:target/dependency/* AddApplication</web>
+						<web>java $JAVA_OPTS -Dserver.port=$PORT -jar target/*.jar  </web> <!-- http://nicholaspaulsmith.com/spring-boot-on-heroku/ -->
 					</processTypes>
 					<appName>coffee-shop-test</appName>
 				</configuration>

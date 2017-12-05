@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-@SpringBootApplication(exclude =  {JpaRepositoriesAutoConfiguration.class, HibernateJpaAutoConfiguration.class}) // https://github.com/spring-projects/spring-boot/issues/6987
+@SpringBootApplication(exclude =  {JpaRepositoriesAutoConfiguration.class,org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class, HibernateJpaAutoConfiguration.class}) // https://github.com/spring-projects/spring-boot/issues/6987
 @Import({SchedulerConfig.class})
 @EnableWebMvc
 @ComponentScan("com.lazermann.AddApplication.*")
