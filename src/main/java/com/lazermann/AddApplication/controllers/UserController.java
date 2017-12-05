@@ -39,7 +39,7 @@ public class UserController {
         return "The user id is: " + userId;
     }
 
-    @RequestMapping(value="/save")
+    @RequestMapping(value="/save", method = RequestMethod.POST)
     public String create(String email, String name) {
         try {
             User user = new User(email, name);
@@ -50,7 +50,7 @@ public class UserController {
         }
         return "User succesfully saved!";
     }
-    @RequestMapping(value="/cheat")
+    @RequestMapping(value="/cheat", method = RequestMethod.GET)
     public String cheat(String email, String name) {
         try {
             User user = new User(email, name);

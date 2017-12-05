@@ -13,8 +13,7 @@ public class SchedulerConfig {
 
     @Bean
     public JobDetail sampleJobDetail() {
-        return JobBuilder.newJob(CheckUserPointsJob.class).withIdentity("sampleJob")
-                .usingJobData("name", "World").storeDurably().build();
+        return JobBuilder.newJob(CheckUserPointsJob.class).build();
     }
 
     @Bean
