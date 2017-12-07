@@ -1,5 +1,6 @@
 package com.lazermann.AddApplication.dao;
 
+import com.lazermann.AddApplication.dto.UserDto;
 import com.lazermann.AddApplication.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,58 +21,47 @@ public class UserDao {
         return _sessionFactory.getCurrentSession();
     }
 
-    public void save(User user) {
+    public void save(User user) throws Exception {
         getSession().save(user);
         //return;
     }
 
-    public void fillDb() {
-        User c = new User("John", "doe@gmail.com");
-        c.setPointsToday(100);
-        c.setPointsTotal(885);
+    public void fillDb() throws Exception {
+        User c = new User("John", "Doe", "doe@gmail.com", 300f);
+
         getSession().save(c);
 
-        User u = new User("John", "doe@gmail.com");
-        u.setPointsToday(80);
-        u.setPointsTotal(885);
-        getSession().save(u);
+        User u = new User("Jack", "Dickerson", "dickerson@gmail.com", 300f);
 
+        getSession().save(u);
     }
 
-    public void delete(User user) {
+    public void delete(User user) throws Exception {
         getSession().delete(user);
         //return;
     }
 
-    // suppose to call once a day at 12 AM
-    public void checkUsersPoints()
-    {
-        List<User> all = getAll();
-
-        for (User u : all)
-        {
-            if(u.getPointsToday() < 100)
-            {
-                u.setPointsTotal(u.getPointsTotal() - 100);
-            }
-            u.setPointsToday(0);
-            getSession().update(u);
-        }
+    public User getUser(String card_id) {
+        return (User) getSession().createQuery(
+                "from User user where user.id = :card_id")
+                .setParameter("card_id", Long.parseLong(card_id))
+                .uniqueResult();
     }
 
+
     @SuppressWarnings("unchecked")
-    public List<User> getAll() {
+    public List<UserDto> getAll() {
         return getSession().createQuery("from User").list();
     }
 
-    public User getByEmail(String email) {
+    public User getByEmail(String email) throws Exception {
         return (User) getSession().createQuery(
                 "from User where email = :email")
                 .setParameter("email", email)
                 .uniqueResult();
     }
 
-    public User getById(long id) {
+    public User getUserById(long id) throws Exception {
         return (User) getSession().load(User.class, id);
     }
 
@@ -80,4 +70,16 @@ public class UserDao {
         return;
     }
 
+
+    public float getBalance(long card_id) {
+        float value = (float)getSession().createQuery(
+                "select usr.balance from User usr where usr.id = :card_id")
+                .setParameter("card_id", card_id)
+                .uniqueResult();
+        return value;
+    }
+
+    public void updateBalance(String card_id) {
+
+    }
 }

@@ -1,28 +1,23 @@
-package com.lazermann.AddApplication.model;
+package com.lazermann.AddApplication.dto;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-import javax.persistence.*;
+public class UserDto {
+    public UserDto() { }
 
-@Entity
-@Table(name="users")
-public class User
-{
-    public User() { }
-
-    public User(long card_id) {
+    public UserDto(long card_id) {
         this.id = card_id;
     }
 
-
-    public User(String firstName, String secondName, String email, float balance) {
+    public UserDto(String firstName, String secondName, String email, float balance) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.email = email;
         this.balance = balance;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private  String firstName;
@@ -34,8 +29,8 @@ public class User
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setId(long card_id) {
+        this.id = card_id;
     }
 
     public String getFirstName() {

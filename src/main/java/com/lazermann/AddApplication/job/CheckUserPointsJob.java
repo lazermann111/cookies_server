@@ -18,6 +18,6 @@ public class CheckUserPointsJob extends QuartzJobBean
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         System.out.println("******************* execute CheckUserPointsJob ********************");
 
-        service.checkUsersPoints();
+        //service.checkUsersPoints();
     }
 }
