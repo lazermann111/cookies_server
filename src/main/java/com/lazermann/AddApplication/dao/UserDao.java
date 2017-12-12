@@ -1,7 +1,9 @@
 package com.lazermann.AddApplication.dao;
 
 import com.lazermann.AddApplication.dto.UserDto;
+import com.lazermann.AddApplication.helpers.DozerHelper;
 import com.lazermann.AddApplication.model.User;
+import org.dozer.DozerBeanMapper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,9 @@ public class UserDao {
 
     @Autowired
     private SessionFactory _sessionFactory;
+
+    @Autowired
+    DozerBeanMapper dozerMapper;
 
     private Session getSession() {
         return _sessionFactory.getCurrentSession();
@@ -41,6 +46,7 @@ public class UserDao {
         //return;
     }
 
+    @SuppressWarnings("unchecked")
     public User getUser(String card_id) {
         return (User) getSession().createQuery(
                 "from User user where user.id = :card_id")
@@ -50,8 +56,9 @@ public class UserDao {
 
 
     @SuppressWarnings("unchecked")
-    public List<UserDto> getAll() {
-        return getSession().createQuery("from User").list();
+    public List<UserDto> getAllUsers() {
+        List<User> list = getSession().createQuery("from User").list();
+        return DozerHelper.map(dozerMapper, list, UserDto.class);
     }
 
     public User getByEmail(String email) throws Exception {
@@ -61,8 +68,11 @@ public class UserDao {
                 .uniqueResult();
     }
 
-    public User getUserById(long id) throws Exception {
-        return (User) getSession().load(User.class, id);
+    public UserDto getUserById(long id) throws Exception {
+        User user = (User) getUser(String.valueOf(id));
+        if(user == null)
+            throw new IllegalArgumentException("There is no user with id " + id);
+        return dozerMapper.map(user, UserDto.class);
     }
 
     public void update(User user) {
@@ -72,6 +82,8 @@ public class UserDao {
 
 
     public float getBalance(long card_id) {
+        if(getUser(String.valueOf(card_id)) == null)
+            throw new IllegalArgumentException("There is no user with id " + card_id);
         float value = (float)getSession().createQuery(
                 "select usr.balance from User usr where usr.id = :card_id")
                 .setParameter("card_id", card_id)

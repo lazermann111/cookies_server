@@ -1,5 +1,6 @@
 package com.lazermann.AddApplication.configs;
 
+import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -69,6 +70,17 @@ public class DatabaseConfig {
                 new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory().getObject());
         return transactionManager;
+    }
+
+    @Bean(name = "org.dozer.Mapper")
+    public DozerBeanMapper dozerBean() {
+        /*List<String> mappingFiles = Arrays.asList(
+                "dozer-global-configuration.xml",
+                "dozer-bean-mappings.xml",
+                "more-dozer-bean-mappings.xml"
+        );*/
+
+        return new DozerBeanMapper();
     }
 
 }

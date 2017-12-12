@@ -9,15 +9,13 @@ public class PurchaseDto {
     public PurchaseDto() {
     }
 
-    public PurchaseDto(long card_id, String name, float price) {
+    public PurchaseDto(long card_id, float price) {
         this.card_id = card_id;
-        this.name = name;
         this.price = price;
     }
 
     private long id;
     private long card_id;
-    private String name;
     private float price;
     private Date date;
 
@@ -35,14 +33,6 @@ public class PurchaseDto {
 
     public void setCard_id(long card_id) {
         this.card_id = card_id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public float getPrice() {

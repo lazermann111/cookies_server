@@ -9,9 +9,8 @@ public class Purchase {
     public Purchase() {
     }
 
-    public Purchase(long card_id, String name, float price) {
+    public Purchase(long card_id, float price) {
         this.card_id = card_id;
-        this.name = name;
         this.price = price;
     }
 
@@ -19,7 +18,6 @@ public class Purchase {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private long card_id;
-    private String name;
     private float price;
     @Temporal(TemporalType.DATE)
     private Date date;
@@ -38,14 +36,6 @@ public class Purchase {
 
     public void setCard_id(long card_id) {
         this.card_id = card_id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public float getPrice() {

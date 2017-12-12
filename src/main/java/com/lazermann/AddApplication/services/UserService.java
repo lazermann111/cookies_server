@@ -21,8 +21,11 @@ public class UserService {
         return userDao.getByEmail(email);
     }
 
-    public User getById(long id) throws Exception {
-        return userDao.getUserById(id);
+    public UserDto getUserById(long id) throws Exception {
+        UserDto userDto = userDao.getUserById(id);
+        if(userDto == null)
+            throw new IllegalArgumentException("There is no user with id " + id);
+        return userDto;
     }
 
 
@@ -38,11 +41,12 @@ public class UserService {
         userDao.save(user);
     }
 
-    public List<UserDto> getAll() {
-        return userDao.getAll();
+    public List<UserDto> getAllUsers() {
+        return userDao.getAllUsers();
     }
 
     public float getBalance(long card_id) {
-        return userDao.getBalance(card_id);
+        float balance = userDao.getBalance(card_id);
+        return balance;
     }
 }

@@ -35,10 +35,10 @@ public class PurchaseController {
     }
 
     @RequestMapping(value = "/buy", method = RequestMethod.POST)
-    public ResponseEntity addPurchase(String card_id, String name, String price) {
+    public ResponseEntity addPurchase(String card_id, String price) {
         ResponseEntity response;
         try {
-            response = purchaseService.addPurchase(card_id, name, price);
+            response = purchaseService.addPurchase(card_id, price);
         }
         catch (Exception ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -80,5 +80,17 @@ public class PurchaseController {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(purchases, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/refund", method = RequestMethod.POST)
+    public ResponseEntity refund(String card_id, String purchaseId) {
+        ResponseEntity response;
+        try {
+            response = purchaseService.refund(card_id, purchaseId);
+        }
+        catch (Exception ex){
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return response;
     }
 }

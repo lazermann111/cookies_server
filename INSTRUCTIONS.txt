@@ -16,3 +16,5 @@ Deployment to Heroku:
 ********************************
 URIs example
 http://localhost:8081/user/delete?id={id}
+
+https://coffee-shop-test.herokuapp.com/user/
