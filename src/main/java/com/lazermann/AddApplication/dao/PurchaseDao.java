@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.util.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 
 @Repository
@@ -28,27 +30,26 @@ public class PurchaseDao {
 
     public void fillDB() throws Exception{
         Purchase purchase = new Purchase(1,200);
-        Date date = new Date();
-        purchase.setDate(date);
+        //LocalDateTime dateTime = LocalDateTime.now();
+        Calendar calendar = Calendar.getInstance();
+        purchase.setDate(calendar);
         getSession().save(purchase);
         Purchase purchase2 = new Purchase(1,200);
-        purchase2.setDate(date);
+        purchase2.setDate(calendar);
         getSession().save(purchase2);
     }
 
-    public void addPurchase(String card_id, String price) throws Exception  {
+    public PurchaseDto addPurchase(String card_id, String price) throws Exception  {
         Purchase purchase = new Purchase(Long.parseLong(card_id),Float.parseFloat(price));
-        Date date = new Date();
-        purchase.setDate(date);
+        //LocalDateTime dateTime = LocalDateTime.now();
+        Calendar calendar = Calendar.getInstance();
+        System.out.println(calendar);
+        //Date date = new Date();
+        //date.setTime(date.getTime());
+        purchase.setDate(calendar);
         getSession().save(purchase);
+        return dozerMapper.map(purchase, PurchaseDto.class);
     }
-
-    /*public void addRefund(String card_id, String name, String price) throws Exception  {
-        Purchase purchase = new Purchase(Long.parseLong(card_id),"Coca-Cola",Float.parseFloat(price)*(-1));
-        Date date = new Date();
-        purchase.setDate(date);
-        getSession().save(purchase);
-    }*/
 
     @SuppressWarnings("unchecked")
     public Purchase getPurchase(String card_id, String purchaseId) throws Exception {
@@ -70,7 +71,7 @@ public class PurchaseDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<PurchaseDto> getAllPurchases(Date from, Date to) throws Exception {
+    public List<PurchaseDto> getAllPurchases(Calendar from, Calendar to) throws Exception {
         List<Purchase> list = getSession().createQuery(
                 "from Purchase purchase where purchase.date between :from and :to")
                 .setParameter("from", from)

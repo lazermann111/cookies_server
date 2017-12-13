@@ -3,6 +3,8 @@ package com.lazermann.AddApplication.dto;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 
 public class PurchaseDto {
@@ -17,7 +19,7 @@ public class PurchaseDto {
     private long id;
     private long card_id;
     private float price;
-    private Date date;
+    private Calendar date;
 
     public long getId() {
         return id;
@@ -43,11 +45,11 @@ public class PurchaseDto {
         this.price = price;
     }
 
-    public Date getDate() {
+    public Calendar getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Calendar date) {
         this.date = date;
     }
 }

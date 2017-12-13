@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.MonthDay;
 import java.util.Calendar;
@@ -36,11 +39,11 @@ public class PurchaseService {
         if(user.getBalance() < Float.parseFloat(price))
             return new ResponseEntity<>("There is not enough money.\n Balance: " + user.getBalance(), HttpStatus.BAD_REQUEST);
 
-        purchaseDao.addPurchase(card_id, price);//add to table Purchase
+        PurchaseDto purchaseDto = purchaseDao.addPurchase(card_id, price);//add to table Purchase
         user.setBalance(user.getBalance() - Float.parseFloat(price));
         userDao.update(user);
 
-        return new ResponseEntity<>("Successfully paid " + price + "\nBalance: " + user.getBalance(), HttpStatus.OK);
+        return new ResponseEntity<>(purchaseDto, HttpStatus.OK);
 
     }
 
@@ -52,27 +55,40 @@ public class PurchaseService {
     }
 
     public List<PurchaseDto> getAllPurchases(Date from, Date to) throws Exception {
-        return purchaseDao.getAllPurchases(from, to);
+        //LocalDateTime dateTimeFrom = LocalDateTime.of(from.getYear(), from.getMonth(), from.getDay(), 0, 0);
+        //LocalDateTime dateTimeTo = LocalDateTime.of(to.getYear(), to.getMonth(), to.getDay(), 24, 0);
+        Calendar fromC = Calendar.getInstance();
+        fromC.setTime(from);
+        Calendar toC = Calendar.getInstance();
+        toC.setTime(to);
+        return purchaseDao.getAllPurchases(fromC, toC);
     }
 
     public List<PurchaseDto> getAllPurchasesForDay() throws Exception {
-        Date from = new Date();
-        Calendar date = Calendar.getInstance();
-        date.set(Calendar.HOUR, 0);
-        date.set(Calendar.MINUTE, 0);
-        date.set(Calendar.HOUR,0);
-        from = date.getTime();
+        Calendar dateFrom = Calendar.getInstance();
+        dateFrom.set(Calendar.HOUR_OF_DAY, 0);
+        dateFrom.set(Calendar.MINUTE, 0);
+        dateFrom.set(Calendar.HOUR,0);
+        System.out.println("Date from: " + dateFrom.toString());
 
-        Date to = new Date();
-        date.set(Calendar.HOUR, 24);
 
-        return purchaseDao.getAllPurchases(from, to);
+        Calendar dateTo = Calendar.getInstance();
+        dateTo.set(Calendar.HOUR_OF_DAY, 23);
+        dateTo.set(Calendar.MINUTE, 59);
+        dateTo.set(Calendar.HOUR, 23);
+
+        System.out.println("Date from: " + dateTo.toString());
+
+
+        return purchaseDao.getAllPurchases(dateFrom, dateTo);
     }
 
-    public ResponseEntity refund(String card_id, String purchaseId) throws Exception {
+    public ResponseEntity refund(String card_id, String purchaseId, String price) throws Exception {
         Purchase purchase = purchaseDao.getPurchase(card_id, purchaseId);
         if(purchase == null)
             throw new IllegalArgumentException("There is no purchase with id " + purchaseId);
+        if(purchase.getPrice() != Float.parseFloat(price))
+            throw new IllegalArgumentException("Entered wrong amount!");
 
         User user = userDao.getUser(card_id);
         if(user == null)
@@ -84,6 +100,6 @@ public class PurchaseService {
         userDao.update(user);
         purchaseDao.addPurchase(card_id, String.valueOf(purchase.getPrice()*(-1.0)));
 
-        return new ResponseEntity<>("Purchase " + purchaseId + "is refunded!\nBalance: " + user.getBalance(), HttpStatus.OK);
+        return new ResponseEntity<>("Purchase " + purchaseId + "is refunded! \nBalance: " + user.getBalance(), HttpStatus.OK);
     }
 }

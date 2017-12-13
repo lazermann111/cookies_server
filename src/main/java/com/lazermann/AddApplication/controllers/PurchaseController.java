@@ -83,10 +83,10 @@ public class PurchaseController {
     }
 
     @RequestMapping(value = "/refund", method = RequestMethod.POST)
-    public ResponseEntity refund(String card_id, String purchaseId) {
+    public ResponseEntity refund(String card_id, String purchaseId, String price) {
         ResponseEntity response;
         try {
-            response = purchaseService.refund(card_id, purchaseId);
+            response = purchaseService.refund(card_id, purchaseId, price);
         }
         catch (Exception ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
