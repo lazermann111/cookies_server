@@ -2,6 +2,7 @@ package com.lazermann.AddApplication.dao;
 
 import com.lazermann.AddApplication.dto.PurchaseDto;
 import com.lazermann.AddApplication.helpers.DozerHelper;
+import com.lazermann.AddApplication.model.Password;
 import com.lazermann.AddApplication.model.Purchase;
 import org.dozer.DozerBeanMapper;
 import org.hibernate.Session;
@@ -29,18 +30,21 @@ public class PurchaseDao {
     }
 
     public void fillDB() throws Exception{
-        Purchase purchase = new Purchase(1,200);
+        Purchase purchase = new Purchase("1",200);
+        purchase.setEmployeeId("1111");
         //LocalDateTime dateTime = LocalDateTime.now();
         Calendar calendar = Calendar.getInstance();
         purchase.setDate(calendar);
         getSession().save(purchase);
-        Purchase purchase2 = new Purchase(1,200);
+        Purchase purchase2 = new Purchase("1",200);
+        purchase2.setEmployeeId("1111");
         purchase2.setDate(calendar);
         getSession().save(purchase2);
     }
 
-    public PurchaseDto addPurchase(String card_id, String price) throws Exception  {
-        Purchase purchase = new Purchase(Long.parseLong(card_id),Float.parseFloat(price));
+    public PurchaseDto addPurchase(String card_id, String price, String employeeId) throws Exception  {
+        Purchase purchase = new Purchase(card_id,Float.parseFloat(price));
+        purchase.setEmployeeId(employeeId);
         //LocalDateTime dateTime = LocalDateTime.now();
         Calendar calendar = Calendar.getInstance();
         System.out.println(calendar);
@@ -54,28 +58,30 @@ public class PurchaseDao {
     @SuppressWarnings("unchecked")
     public Purchase getPurchase(String card_id, String purchaseId) throws Exception {
         return (Purchase) getSession().createQuery(
-                "from Purchase purchase where purchase.card_id = :card_id and purchase.id = :purchaseId")
-                .setParameter("card_id", Long.parseLong(card_id))
+                "from Purchase purchase where purchase.badgeId = :card_id and purchase.id = :purchaseId")
+                .setParameter("card_id", card_id)
                 .setParameter("purchaseId", Long.parseLong(purchaseId))
                 .uniqueResult();
 
     }
 
     @SuppressWarnings("unchecked")
-    public List<PurchaseDto> getAllPurchases(String card_id) throws Exception {
+    public List<PurchaseDto> getAllPurchases(String card_id, String employeeId) throws Exception {
         List<Purchase> list = getSession().createQuery(
-                "from Purchase purchase where purchase.card_id = :card_id")
-                .setParameter("card_id", Long.parseLong(card_id))
+                "from Purchase purchase where purchase.badgeId = :card_id and purchase.employeeId = :employeeId")
+                .setParameter("card_id", card_id)
+                .setParameter("employeeId", employeeId)
                 .list();
         return DozerHelper.map(dozerMapper, list, PurchaseDto.class);
     }
 
     @SuppressWarnings("unchecked")
-    public List<PurchaseDto> getAllPurchases(Calendar from, Calendar to) throws Exception {
+    public List<PurchaseDto> getAllPurchases(Calendar from, Calendar to, String employeeId) throws Exception {
         List<Purchase> list = getSession().createQuery(
-                "from Purchase purchase where purchase.date between :from and :to")
+                "from Purchase purchase where purchase.date between :from and :to and employeeId = :employeeId")
                 .setParameter("from", from)
                 .setParameter("to", to)
+                .setParameter("employeeId", employeeId)
                 .list();
         return DozerHelper.map(dozerMapper, list, PurchaseDto.class);
     }
@@ -83,5 +89,12 @@ public class PurchaseDao {
     public void update(Purchase purchase) {
         getSession().update(purchase);
         return;
+    }
+
+    public Password getPassword(String password) {
+        return (Password)getSession().createQuery(
+                "from Password pass where pass.password = :password")
+                .setParameter("password", password)
+                .uniqueResult();
     }
 }

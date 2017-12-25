@@ -7,6 +7,7 @@ import com.lazermann.AddApplication.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,9 +48,9 @@ public class UserController {
     }*/
 
     @RequestMapping(value="/createUser", method = RequestMethod.POST)
-    public ResponseEntity create(String firstName, String secondName, String email, float balance) {
+    public ResponseEntity create(String firstName, String lastName, String middleName, String suffix, String balance, String badgeNumber) {
         try {
-            User user = new User(firstName, secondName, email, balance);
+            User user = new User(firstName, lastName, middleName, suffix, Float.parseFloat(balance), badgeNumber);
             userService.save(user);
         }
         catch(Exception ex) {
@@ -60,13 +61,13 @@ public class UserController {
     }
 
     @RequestMapping(value="/getUser", method = RequestMethod.GET)
-    public ResponseEntity getUser(String userId) {
+    public ResponseEntity getUser(String cardId) {
         UserDto userDto;
         try {
-            userDto = userService.getUserById(Long.parseLong(userId));
+            userDto = userService.getUserById(cardId);
         }
         catch (IllegalArgumentException ex) {
-            return new ResponseEntity<>("There is now user with id " + userId ,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("There is now user with id " + cardId ,HttpStatus.BAD_REQUEST);
         }
         catch(Exception ex) {
             return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
@@ -99,13 +100,13 @@ public class UserController {
     }
 
     @RequestMapping(value="/getBalance", method = RequestMethod.GET)
-    public ResponseEntity getBalance(String card_id) {
+    public ResponseEntity getBalance(String cardId) {
         float balance;
         try{
-            balance = userService.getBalance(Long.parseLong(card_id));
+            balance = userService.getBalance(cardId);
         }
         catch (IllegalArgumentException ex) {
-            return new ResponseEntity<>("There is now user with id " + card_id ,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("There is now user with id " + cardId ,HttpStatus.BAD_REQUEST);
         }
         catch (Exception ex) {
             return new ResponseEntity<>("Error: " + ex.getMessage() ,HttpStatus.BAD_REQUEST);
@@ -113,6 +114,51 @@ public class UserController {
         }
         return new ResponseEntity<>(balance, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/blockCard", method = RequestMethod.POST)
+    public ResponseEntity blockCard(String cardId) {
+        try {
+            userService.blockCard(cardId);
+        }
+        catch (IllegalArgumentException ex) {
+            return new ResponseEntity<>("There is now user with id " + cardId ,HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Card with id " + cardId + " is blocked!", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/unblockCard", method = RequestMethod.POST)
+    public ResponseEntity unblockCard(String cardId) {
+        try {
+            userService.unblockCard(cardId);
+        }
+        catch (IllegalArgumentException ex) {
+            return new ResponseEntity<>("There is now user with id " + cardId ,HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Card with id " + cardId + " is unblocked!", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/updateBalance", method = RequestMethod.POST)
+    public ResponseEntity updateBalance(String cardId, String amount){
+        String balance;
+        try{
+            balance = userService.updateBalance(cardId, amount);
+        }
+        catch (IllegalArgumentException ex) {
+            return new ResponseEntity<>("There is now user with id " + cardId ,HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>("Error: " + ex.getMessage() ,HttpStatus.BAD_REQUEST);
+
+        }
+        return new ResponseEntity<>(balance, HttpStatus.OK);
+    }
+
 
 
 

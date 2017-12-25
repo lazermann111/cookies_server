@@ -11,26 +11,33 @@ public class UserDto {
         this.id = card_id;
     }
 
-    public UserDto(String firstName, String secondName, String email, float balance) {
+    public UserDto(long id, String firstName, String lastName, String middleName, String suffix, float balance, String badgeNumber) {
+        this.id = id;
         this.firstName = firstName;
-        this.secondName = secondName;
-        this.email = email;
+        this.lastName = lastName;
+        this.middleName = middleName;
+        this.suffix = suffix;
         this.balance = balance;
+        this.badgeNumber = badgeNumber;
+        this.isActive = true;
     }
 
     private long id;
 
-    private  String firstName;
-    private  String secondName;
-    private  String email;
-    private  float balance;
+    private String firstName;
+    private String lastName;
+    private String middleName;
+    private String suffix;
+    private float balance;
+    private String badgeNumber;
+    private boolean isActive;
 
     public long getId() {
         return id;
     }
 
-    public void setId(long card_id) {
-        this.id = card_id;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -41,20 +48,28 @@ public class UserDto {
         this.firstName = firstName;
     }
 
-    public String getSecondName() {
-        return secondName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setSecondName(String secondName) {
-        this.secondName = secondName;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getMiddleName() {
+        return middleName;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 
     public float getBalance() {
@@ -63,5 +78,21 @@ public class UserDto {
 
     public void setBalance(float balance) {
         this.balance = balance;
+    }
+
+    public String getBadgeNumber() {
+        return badgeNumber;
+    }
+
+    public void setBadgeNumber(String bagdeNumber) {
+        this.badgeNumber = bagdeNumber;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }

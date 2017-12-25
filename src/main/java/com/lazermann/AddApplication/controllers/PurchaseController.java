@@ -1,8 +1,10 @@
 package com.lazermann.AddApplication.controllers;
 
+import com.lazermann.AddApplication.dto.FullPurchaseDto;
 import com.lazermann.AddApplication.dto.PurchaseDto;
 import com.lazermann.AddApplication.model.Purchase;
 import com.lazermann.AddApplication.services.PurchaseService;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -35,10 +37,10 @@ public class PurchaseController {
     }
 
     @RequestMapping(value = "/buy", method = RequestMethod.POST)
-    public ResponseEntity addPurchase(String card_id, String price) {
+    public ResponseEntity addPurchase(String cardId, String price, String employeeId) {
         ResponseEntity response;
         try {
-            response = purchaseService.addPurchase(card_id, price);
+            response = purchaseService.addPurchase(cardId, price, employeeId);
         }
         catch (Exception ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -47,10 +49,10 @@ public class PurchaseController {
     }
 
     @RequestMapping(value = "/getAllPurchases", method = RequestMethod.GET)
-    public ResponseEntity getAllPurchases(String card_id) {
-        List<PurchaseDto> purchases = null;
+    public ResponseEntity getAllPurchases(String cardId, String employeeId) {
+        List<FullPurchaseDto> purchases = null;
         try {
-            purchases = purchaseService.getAllPurchases(card_id);
+            purchases = purchaseService.getAllPurchases(cardId, employeeId);
         }
         catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -59,10 +61,10 @@ public class PurchaseController {
     }
 
     @RequestMapping(value = "/getAllPurchasesFromTo", method = RequestMethod.GET)
-    public ResponseEntity getAllPurchases(@RequestParam("from") @DateTimeFormat(pattern="yyyy-MM-dd")Date from, @RequestParam("to") @DateTimeFormat(pattern="yyyy-MM-dd") Date to) {
-        List<PurchaseDto> purchases = null;
+    public ResponseEntity getAllPurchases(@RequestParam("from") @DateTimeFormat(pattern="yyyy-MM-dd")Date from, @RequestParam("to") @DateTimeFormat(pattern="yyyy-MM-dd") Date to, String employeeId) {
+        List<FullPurchaseDto> purchases = null;
         try {
-            purchases = purchaseService.getAllPurchases(from, to);
+            purchases = purchaseService.getAllPurchases(from, to, employeeId);
         }
         catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -71,10 +73,10 @@ public class PurchaseController {
     }
 
     @RequestMapping(value = "/getAllPurchasesForDay", method = RequestMethod.GET)
-    public ResponseEntity getAllPurchasesForDay() {
-        List<PurchaseDto> purchases = null;
+    public ResponseEntity getAllPurchasesForDay(String employeeId) {
+        List<FullPurchaseDto> purchases = null;
         try {
-            purchases = purchaseService.getAllPurchasesForDay();
+            purchases = purchaseService.getAllPurchasesForDay(employeeId);
         }
         catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -83,14 +85,38 @@ public class PurchaseController {
     }
 
     @RequestMapping(value = "/refund", method = RequestMethod.POST)
-    public ResponseEntity refund(String card_id, String purchaseId, String price) {
+    public ResponseEntity refund(String cardId, String purchaseId, String price, String employeeId) {
         ResponseEntity response;
         try {
-            response = purchaseService.refund(card_id, purchaseId, price);
+            response = purchaseService.refund(cardId, purchaseId, price, employeeId);
         }
         catch (Exception ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return response;
+    }
+
+    @RequestMapping(value = "/confirmPass", method = RequestMethod.GET)
+    public ResponseEntity confirmPass(String password) {
+        ResponseEntity responseEntity;
+        try {
+            responseEntity = purchaseService.confirmPass(password);
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+    @RequestMapping(value = "/createPassword", method = RequestMethod.POST)
+    public ResponseEntity createPassword(String password) {
+        ResponseEntity responseEntity;
+        try {
+            responseEntity = purchaseService.createPassword(password);
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
     }
 }

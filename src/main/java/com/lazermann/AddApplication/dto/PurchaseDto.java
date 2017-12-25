@@ -1,23 +1,19 @@
 package com.lazermann.AddApplication.dto;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Date;
 
 public class PurchaseDto {
     public PurchaseDto() {
     }
 
-    public PurchaseDto(long card_id, float price) {
-        this.card_id = card_id;
+    public PurchaseDto(String card_id, float price) {
+        this.badgeId = card_id;
         this.price = price;
     }
 
     private long id;
-    private long card_id;
+    private String employeeId;
+    private String badgeId;
     private float price;
     private Calendar date;
 
@@ -29,12 +25,20 @@ public class PurchaseDto {
         this.id = id;
     }
 
-    public long getCard_id() {
-        return card_id;
+    public String getBadgeId() {
+        return badgeId;
     }
 
-    public void setCard_id(long card_id) {
-        this.card_id = card_id;
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public void setBadgeId(String badgeId) {
+        this.badgeId = badgeId;
     }
 
     public float getPrice() {
