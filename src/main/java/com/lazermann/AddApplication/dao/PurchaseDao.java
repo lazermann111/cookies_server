@@ -2,6 +2,7 @@ package com.lazermann.AddApplication.dao;
 
 import com.lazermann.AddApplication.dto.PurchaseDto;
 import com.lazermann.AddApplication.helpers.DozerHelper;
+import com.lazermann.AddApplication.model.Employee;
 import com.lazermann.AddApplication.model.Password;
 import com.lazermann.AddApplication.model.Purchase;
 import org.dozer.DozerBeanMapper;
@@ -75,6 +76,14 @@ public class PurchaseDao {
         return DozerHelper.map(dozerMapper, list, PurchaseDto.class);
     }
 
+    public List<PurchaseDto> getAllPurchases(String employeeId) throws Exception {
+        List<Purchase> list = getSession().createQuery(
+                "from Purchase purchase where purchase.employeeId = :employeeId")
+                .setParameter("employeeId", employeeId)
+                .list();
+        return DozerHelper.map(dozerMapper, list, PurchaseDto.class);
+    }
+
     @SuppressWarnings("unchecked")
     public List<PurchaseDto> getAllPurchases(Calendar from, Calendar to, String employeeId) throws Exception {
         List<Purchase> list = getSession().createQuery(
@@ -96,5 +105,20 @@ public class PurchaseDao {
                 "from Password pass where pass.password = :password")
                 .setParameter("password", password)
                 .uniqueResult();
+    }
+
+    public Employee getEmployee(String employeeId) {
+        return (Employee)getSession().createQuery(
+        "from Employee emp where emp.employeeId = :employeeId")
+                .setParameter("employeeId", employeeId)
+                .uniqueResult();
+    }
+
+    public void saveEmployee(Employee employee) {
+        getSession().save(employee);
+    }
+
+    public void updateEmployee(Employee employee) {
+        getSession().update(employee);
     }
 }

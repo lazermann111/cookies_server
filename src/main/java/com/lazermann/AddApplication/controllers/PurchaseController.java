@@ -84,6 +84,30 @@ public class PurchaseController {
         return new ResponseEntity<>(purchases, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getAllPurchasesXReport", method = RequestMethod.GET)
+    public ResponseEntity getAllPurchasesXReport(String employeeId) {
+        List<FullPurchaseDto> purchases = null;
+        try {
+            purchases = purchaseService.getAllPurchasesXReport(employeeId);
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(purchases, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getAllPurchasesZReport", method = RequestMethod.GET)
+    public ResponseEntity getAllPurchasesZReport(String employeeId) {
+        List<FullPurchaseDto> purchases = null;
+        try {
+            purchases = purchaseService.getAllPurchasesZReport(employeeId);
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(purchases, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/refund", method = RequestMethod.POST)
     public ResponseEntity refund(String cardId, String purchaseId, String price, String employeeId) {
         ResponseEntity response;
@@ -113,6 +137,18 @@ public class PurchaseController {
         ResponseEntity responseEntity;
         try {
             responseEntity = purchaseService.createPassword(password);
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return responseEntity;
+    }
+
+    @RequestMapping(value = "/getLastTimeUpdated", method = RequestMethod.GET)
+    public ResponseEntity getLastTimeUpdated(String employeeId) {
+        ResponseEntity responseEntity;
+        try {
+            responseEntity = purchaseService.getLastTimeUpdated(employeeId);
         }
         catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
