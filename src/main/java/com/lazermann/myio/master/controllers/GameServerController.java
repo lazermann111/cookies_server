@@ -1,6 +1,6 @@
 package com.lazermann.myio.master.controllers;
 
-import com.lazermann.myio.master.dto.ServerBaseDto;
+import com.lazermann.myio.master.dto.GameServerBaseDto;
 import com.lazermann.myio.master.model.Region;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,13 +12,14 @@ public class GameServerController
 {
 
 
-    public ResponseEntity registerNewServer(ServerBaseDto baseDto)
+    public ResponseEntity registerNewServer(GameServerBaseDto baseDto)
     {
+
         return null;
     }
 
 
-    public ResponseEntity heartBeat(ServerBaseDto baseDto)
+    public ResponseEntity heartBeat(GameServerBaseDto baseDto)
     {
         return null;
     }

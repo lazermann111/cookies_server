@@ -3,14 +3,14 @@ package com.lazermann.myio.master.dto;
 
 import com.lazermann.myio.master.model.Region;
 
-public class ServerBaseDto {
+public class GameServerBaseDto {
 
     private long id;
     private Region region;
     private int playersNumber;
     private String URL;
 
-    public ServerBaseDto(long id, Region region, int playersNumber, String URL) {
+    public GameServerBaseDto(long id, Region region, int playersNumber, String URL) {
         this.id = id;
         this.region = region;
         this.playersNumber = playersNumber;

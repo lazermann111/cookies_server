@@ -3,15 +3,17 @@ package com.lazermann.myio.master.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="servers")
+@Table(name="GameServer")
 public class GameServer {
 
-    public GameServer(Region region, boolean active, long lastHeartbeat, int playersNumber, String URL) {
+    public GameServer(Region region, int playersNumber, String URL) {
         this.region = region;
-        this.active = active;
-        this.lastHeartbeat = lastHeartbeat;
         this.playersNumber = playersNumber;
         this.URL = URL;
+
+
+        this.active = true;
+        this.lastHeartbeat = System.currentTimeMillis();
     }
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
