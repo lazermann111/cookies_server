@@ -1,3 +1,0 @@
-//todo add token for Retrofit
-//todo fix Http statuses
-//todo added price to refund request and check on correct data
