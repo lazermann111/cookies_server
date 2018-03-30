@@ -1,4 +1,4 @@
-package com.lazermann.AddApplication.model;
+package com.lazermann.myio.master.model;
 
 import javax.persistence.*;
 

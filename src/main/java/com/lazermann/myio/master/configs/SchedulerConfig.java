@@ -1,6 +1,6 @@
-package com.lazermann.AddApplication.configs;
+package com.lazermann.myio.master.configs;
 
-import com.lazermann.AddApplication.job.CheckUserPointsJob;
+import com.lazermann.myio.master.job.UpdateServerStatusJob;
 import org.quartz.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +13,7 @@ public class SchedulerConfig {
 
     @Bean
     public JobDetail sampleJobDetail() {
-        return JobBuilder.newJob(CheckUserPointsJob.class).build();
+        return JobBuilder.newJob(UpdateServerStatusJob.class).build();
     }
 
     @Bean

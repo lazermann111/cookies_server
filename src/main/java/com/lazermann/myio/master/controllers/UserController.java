@@ -1,8 +1,8 @@
-package com.lazermann.AddApplication.controllers;
+package com.lazermann.myio.master.controllers;
 
-import com.lazermann.AddApplication.dto.UserDto;
-import com.lazermann.AddApplication.model.User;
-import com.lazermann.AddApplication.services.UserService;
+import com.lazermann.myio.master.dto.UserDto;
+import com.lazermann.myio.master.model.User;
+import com.lazermann.myio.master.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.lazermann.AddApplication.dto;
+package com.lazermann.myio.master.dto;
 
 public class UserDto {
     public UserDto() { }

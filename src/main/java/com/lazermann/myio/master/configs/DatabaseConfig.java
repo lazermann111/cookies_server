@@ -1,4 +1,4 @@
-package com.lazermann.AddApplication.configs;
+package com.lazermann.myio.master.configs;
 
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,9 +1,9 @@
-package com.lazermann.AddApplication.services;
+package com.lazermann.myio.master.services;
 
 
-import com.lazermann.AddApplication.dao.UserDao;
-import com.lazermann.AddApplication.dto.UserDto;
-import com.lazermann.AddApplication.model.User;
+import com.lazermann.myio.master.dao.UserDao;
+import com.lazermann.myio.master.dto.UserDto;
+import com.lazermann.myio.master.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

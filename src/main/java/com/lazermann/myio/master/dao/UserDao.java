@@ -1,8 +1,8 @@
-package com.lazermann.AddApplication.dao;
+package com.lazermann.myio.master.dao;
 
-import com.lazermann.AddApplication.dto.UserDto;
-import com.lazermann.AddApplication.helpers.DozerHelper;
-import com.lazermann.AddApplication.model.User;
+import com.lazermann.myio.master.dto.UserDto;
+import com.lazermann.myio.master.helpers.DozerHelper;
+import com.lazermann.myio.master.model.User;
 import org.dozer.DozerBeanMapper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
