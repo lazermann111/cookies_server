@@ -1,6 +1,8 @@
 package com.lazermann.myio.master.model;
 
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -16,8 +18,15 @@ public class HttpServer {
     private long lastHeartbeat;
     private GameType gameType;
 
-    @OneToMany(cascade = CascadeType.ALL)
+
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<GameServer> gameServers;
+
+
+    private long totalPlayers;
+    private long maxPlayers;
+
 
     public HttpServer() {
     }
@@ -75,5 +84,21 @@ public class HttpServer {
 
     public void setLastHeartbeat(long lastHeartbeat) {
         this.lastHeartbeat = lastHeartbeat;
+    }
+
+    public long getTotalPlayers() {
+        return totalPlayers;
+    }
+
+    public void setTotalPlayers(long totalPlayers) {
+        this.totalPlayers = totalPlayers;
+    }
+
+    public long getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public void setMaxPlayers(long maxPlayers) {
+        this.maxPlayers = maxPlayers;
     }
 }

@@ -36,38 +36,42 @@ public class ServerDao {
                 ("localhost:8000", Region.LOCALHOST, 0, GameType.SOLO, new ArrayList<>());
 
 
-        GameServer a = new GameServer(localhost, true, 10,50);
-        GameServer b = new GameServer(localhost, false, 10,50);
-        GameServer c = new GameServer(localhost, true, 1,50);
+        GameServer a = new GameServer( true, 10,50);
+        GameServer b = new GameServer( false, 10,50);
+        GameServer c = new GameServer( true, 1,50);
 
         localhost.getGameServers().add(a);
         localhost.getGameServers().add(b);
         localhost.getGameServers().add(c);
+        localhost.setTotalPlayers(150);
 
         getSession().save(localhost);
 
     }
 
     @SuppressWarnings("unchecked")
-    public List<GameServerDto> getAllServers() {
-        List<GameServer> list = getSession().createQuery("from GameServer").list();
-        return DozerHelper.map(dozerMapper, list, GameServerDto.class);
+    public List<HttpServerDto> getAllServers() {
+        List<HttpServer> list = getSession().createQuery("from HttpServer").list();
+        return DozerHelper.map(dozerMapper, list, HttpServerDto.class);
     }
 
     @SuppressWarnings("unchecked")
-    public GameServerDto getServerToConnect(Region region) {
-        List<GameServer> server =
-                getSession().createQuery("from GameServer server where server.region = :r and server.active is true ORDER BY server.playersNumber")
+    public HttpServerDto getServerToConnect(Region region) {
+        List<HttpServer> server =
+                getSession().createQuery("from HttpServer server where server.region = :r  ORDER BY server.totalPlayers")
                  .setParameter("r", region).list();
         if(server.isEmpty()) return null;
-        return dozerMapper.map(server.get(0), GameServerDto.class);
+
+
+
+        return dozerMapper.map(server.get(0), HttpServerDto.class);
     }
 
 
     @SuppressWarnings("unchecked")
     public List<GameServerDto> getServersInRegion(Region region) {
        List<GameServer>  servers =
-                getSession().createQuery("from GameServer server where server.region = :r")
+                getSession().createQuery("from HttpServer server where server.region = :r")
                         .setParameter("r", region).list();
         return DozerHelper.map(dozerMapper, servers, GameServerDto.class);
     }
@@ -79,6 +83,15 @@ public class ServerDao {
         {
             HttpServer res = dozerMapper.map(dto, HttpServer.class);
 
+            int maxPlayers = 0, totalPlayers =0;
+            for (GameServer s :res.getGameServers())
+            {
+                maxPlayers +=s.getMaxPlayersNumber();
+                totalPlayers +=s.getPlayersNumber();
+            }
+
+            res.setTotalPlayers(totalPlayers);
+            res.setMaxPlayers(maxPlayers);
 
             getSession().save(res);
             return res;
@@ -86,11 +99,46 @@ public class ServerDao {
         else
         {
             dto.setId(dbServer.getId());
+
+
+            List serv = new ArrayList(dbServer.getGameServers()) ;
+            mapGameServer(dto.getGameServers(), serv);
             dozerMapper.map(dto,  dbServer);
+
+            dbServer.setGameServers(serv);
+
+            int maxPlayers = 0, totalPlayers =0;
+            for (GameServer s : dbServer.getGameServers())
+            {
+                maxPlayers +=s.getMaxPlayersNumber();
+                totalPlayers +=s.getPlayersNumber();
+            }
+
+            dbServer.setTotalPlayers(totalPlayers);
+            dbServer.setMaxPlayers(maxPlayers);
+
+
             getSession().update(dbServer);
             return dbServer;
         }
 
+    }
+    //todo remove ugly hack
+    private List <GameServer> mapGameServer(List<GameServerDto> source , List <GameServer> dest)
+    {
+        for (GameServerDto s : source)
+        {
+            for(GameServer d :dest)
+            {
+                if(s.getWorldId() == d.getWorldId())
+                {
+                    d.setMaxPlayersNumber(s.getMaxPlayersNumber());
+                    d.setMaxPlayersNumber(s.getMaxPlayersNumber());
+                }
+            }
+        }
+
+        return dest;
     }
 
     public void update(GameServer server) throws Exception {

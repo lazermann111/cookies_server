@@ -8,6 +8,7 @@ import com.lazermann.myio.master.model.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +22,8 @@ public class ServerController
     @Autowired
     ServerDao serverDao;
 
-    @RequestMapping(value="/register", method = RequestMethod.POST)
-    public ResponseEntity registerNewServer(HttpServerDto baseDto)
+   /* @RequestMapping(value="/register", method = RequestMethod.POST)
+    public ResponseEntity registerNewServer(@RequestBody HttpServerDto baseDto)
     {
         HttpServer res;
         if(baseDto.getURL() == null || baseDto.getRegion() == null)
@@ -35,10 +36,10 @@ public class ServerController
             return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(res, HttpStatus.CREATED);
-    }
+    }*/
 
     @RequestMapping(value="/heartbeat", method = RequestMethod.POST)
-    public ResponseEntity heartBeat(HttpServerDto baseDto)
+    public ResponseEntity heartBeat(@RequestBody HttpServerDto baseDto)
     {
         HttpServer res = null;
         if(baseDto.getURL() == null || baseDto.getRegion() == null)
@@ -46,12 +47,12 @@ public class ServerController
         try {
 
             // Basically we have constraint on server URL, since it cannot be 2 servers with same url
-            res = serverDao.getServerByUrl(baseDto.getURL());
+           /* res = serverDao.getServerByUrl(baseDto.getURL());
             if(res ==null)
-                return  new ResponseEntity<>("Server URL not found! " + baseDto ,HttpStatus.BAD_REQUEST);
+                return  new ResponseEntity<>("Server URL not found! " + baseDto ,HttpStatus.BAD_REQUEST);*/
 
 
-           serverDao.update(baseDto);
+           serverDao.saveOrUpdate(baseDto);
 
         }
         catch (Exception ex) {
@@ -66,7 +67,7 @@ public class ServerController
     {
 
         try {
-            GameServerDto server  = serverDao.getServerToConnect(regionToPlay);
+            HttpServerDto server  = serverDao.getServerToConnect(regionToPlay);
             if(server == null)
                 return new ResponseEntity<>("No active servers here: " + regionToPlay ,HttpStatus.INTERNAL_SERVER_ERROR);
             else  return new ResponseEntity<>(server, HttpStatus.OK);
@@ -103,7 +104,7 @@ public class ServerController
 
     @RequestMapping(value="/getAll", method = RequestMethod.GET)
     public ResponseEntity getAll() {
-        List<GameServerDto> data = null;
+        List<HttpServerDto> data = null;
         try {
             data = serverDao.getAllServers();
         }

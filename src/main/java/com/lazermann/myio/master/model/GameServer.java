@@ -10,9 +10,9 @@ public class GameServer {
     public GameServer() {
     }
 
-    public GameServer(HttpServer owner, boolean active, int playersNumber, int maxPlayersNumber)
+    public GameServer( boolean active, int playersNumber, int maxPlayersNumber)
     {
-        this.owner = owner;
+
         this.active = active;
         this.playersNumber = playersNumber;
         this.maxPlayersNumber = maxPlayersNumber;
@@ -23,20 +23,18 @@ public class GameServer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-
-    private HttpServer owner;
     private boolean active;
     private int playersNumber;
     private int maxPlayersNumber;
+    private int worldId;
 
 
-
-    public HttpServer getOwner() {
-        return owner;
+    public int getWorldId() {
+        return worldId;
     }
 
-    public void setOwner(HttpServer owner) {
-        this.owner = owner;
+    public void setWorldId(int worldId) {
+        this.worldId = worldId;
     }
 
     public int getMaxPlayersNumber() {

@@ -5,6 +5,8 @@ import java.util.List;
 public class HttpServerDto extends HttpServerBaseDto {
 
     List<GameServerDto> gameServers;
+
+
     public HttpServerDto(){}
     public HttpServerDto(List<GameServerDto> gameServers) {
         this.gameServers = gameServers;
