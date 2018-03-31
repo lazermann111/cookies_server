@@ -10,6 +10,9 @@ public class GameServerBaseDto {
     private int playersNumber;
     private String URL;
 
+    public GameServerBaseDto() {
+    }
+
     public GameServerBaseDto(long id, Region region, int playersNumber, String URL) {
         this.id = id;
         this.region = region;

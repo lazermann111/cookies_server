@@ -6,6 +6,10 @@ import javax.persistence.*;
 @Table(name="GameServer")
 public class GameServer {
 
+
+    public GameServer() {
+    }
+
     public GameServer(Region region, int playersNumber, String URL) {
         this.region = region;
         this.playersNumber = playersNumber;
@@ -22,6 +26,8 @@ public class GameServer {
     private boolean active;
     private long lastHeartbeat;
     private int playersNumber;
+
+
     private String URL;
 
 

@@ -1,5 +1,6 @@
 package com.lazermann.myio.master.dao;
 
+import com.lazermann.myio.master.dto.GameServerBaseDto;
 import com.lazermann.myio.master.dto.GameServerDto;
 import com.lazermann.myio.master.helpers.DozerHelper;
 import com.lazermann.myio.master.model.GameServer;
@@ -52,20 +53,54 @@ public class GameServerDao {
 
     @SuppressWarnings("unchecked")
     public GameServerDto getServerToConnect(Region region) {
-        GameServer server = (GameServer)
-                getSession().createQuery("from GameServer server where server.region = :r and server.active ORDER BY server.playersNumber")
-                 .setParameter("r", region).uniqueResult();
-        return dozerMapper.map(server, GameServerDto.class);
+        List<GameServer> server =
+                getSession().createQuery("from GameServer server where server.region = :r and server.active is true ORDER BY server.playersNumber")
+                 .setParameter("r", region).list();
+        if(server.isEmpty()) return null;
+        return dozerMapper.map(server.get(0), GameServerDto.class);
     }
 
 
-    public void save(GameServer server) throws Exception {
-        getSession().save(server);
+    @SuppressWarnings("unchecked")
+    public List<GameServerDto> getServersInRegion(Region region) {
+       List<GameServer>  servers =
+                getSession().createQuery("from GameServer server where server.region = :r")
+                        .setParameter("r", region).list();
+        return DozerHelper.map(dozerMapper, servers, GameServerDto.class);
+    }
+
+    public GameServer saveOrUpdate(GameServerBaseDto dto) throws Exception {
+
+        GameServer dbServer = getServerByUrl(dto.getURL());
+        if(dbServer == null)
+        {
+            GameServer res = dozerMapper.map(dto, GameServer.class);
+            res.setActive(true);
+            res.setLastHeartbeat(System.currentTimeMillis());
+            getSession().save(res);
+            return res;
+        }
+        else
+        {
+            dto.setId(dbServer.getId());
+            dozerMapper.map(dto,  dbServer);
+            getSession().update(dbServer);
+            return dbServer;
+        }
+
+    }
+
+    public void update(GameServer server) throws Exception {
+
+
+        getSession().update(server);
+
+
     }
 
     public GameServer getServerByUrl(String URL) {
         return (GameServer) getSession().createQuery(
-                "from GameServer sever where sever.url = :url")
+                "from GameServer sever where sever.URL = :url")
                 .setParameter("url", URL)
                 .uniqueResult();
     }
