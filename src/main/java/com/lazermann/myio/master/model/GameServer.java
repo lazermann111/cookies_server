@@ -10,25 +10,43 @@ public class GameServer {
     public GameServer() {
     }
 
-    public GameServer(Region region, int playersNumber, String URL) {
-        this.region = region;
+    public GameServer(HttpServer owner, boolean active, int playersNumber, int maxPlayersNumber)
+    {
+        this.owner = owner;
+        this.active = active;
         this.playersNumber = playersNumber;
-        this.URL = URL;
+        this.maxPlayersNumber = maxPlayersNumber;
 
-
-        this.active = true;
-        this.lastHeartbeat = System.currentTimeMillis();
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private Region region;
+
+
+    private HttpServer owner;
     private boolean active;
-    private long lastHeartbeat;
     private int playersNumber;
+    private int maxPlayersNumber;
 
 
-    private String URL;
+
+    public HttpServer getOwner() {
+        return owner;
+    }
+
+    public void setOwner(HttpServer owner) {
+        this.owner = owner;
+    }
+
+    public int getMaxPlayersNumber() {
+        return maxPlayersNumber;
+    }
+
+    public void setMaxPlayersNumber(int maxPlayersNumber) {
+        this.maxPlayersNumber = maxPlayersNumber;
+    }
+
 
 
     public long getId() {
@@ -39,14 +57,6 @@ public class GameServer {
         this.id = id;
     }
 
-    public Region getRegion() {
-        return region;
-    }
-
-    public void setRegion(Region region) {
-        this.region = region;
-    }
-
     public boolean isActive() {
         return active;
     }
@@ -55,13 +65,6 @@ public class GameServer {
         this.active = active;
     }
 
-    public long getLastHeartbeat() {
-        return lastHeartbeat;
-    }
-
-    public void setLastHeartbeat(long lastHeartbeat) {
-        this.lastHeartbeat = lastHeartbeat;
-    }
 
     public int getPlayersNumber() {
         return playersNumber;
@@ -71,13 +74,7 @@ public class GameServer {
         this.playersNumber = playersNumber;
     }
 
-    public String getURL() {
-        return URL;
-    }
 
-    public void setURL(String URL) {
-        this.URL = URL;
-    }
 
 
 }

@@ -1,9 +1,9 @@
 package com.lazermann.myio.master.controllers;
 
-import com.lazermann.myio.master.dao.GameServerDao;
-import com.lazermann.myio.master.dto.GameServerBaseDto;
+import com.lazermann.myio.master.dao.ServerDao;
 import com.lazermann.myio.master.dto.GameServerDto;
-import com.lazermann.myio.master.model.GameServer;
+import com.lazermann.myio.master.dto.HttpServerDto;
+import com.lazermann.myio.master.model.HttpServer;
 import com.lazermann.myio.master.model.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,20 +16,20 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value="/server")
-public class GameServerController
+public class ServerController
 {
     @Autowired
-    GameServerDao gameServerDao;
+    ServerDao serverDao;
 
     @RequestMapping(value="/register", method = RequestMethod.POST)
-    public ResponseEntity registerNewServer(GameServerBaseDto baseDto)
+    public ResponseEntity registerNewServer(HttpServerDto baseDto)
     {
-        GameServer res;
+        HttpServer res;
         if(baseDto.getURL() == null || baseDto.getRegion() == null)
             return  new ResponseEntity<>("Wrong server info! "+ baseDto ,HttpStatus.BAD_REQUEST);
         try {
 
-            res  = gameServerDao.saveOrUpdate(baseDto);
+            res  = serverDao.saveOrUpdate(baseDto);
         }
         catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
@@ -38,22 +38,20 @@ public class GameServerController
     }
 
     @RequestMapping(value="/heartbeat", method = RequestMethod.POST)
-    public ResponseEntity heartBeat(GameServerBaseDto baseDto)
+    public ResponseEntity heartBeat(HttpServerDto baseDto)
     {
-        GameServer res = null;
+        HttpServer res = null;
         if(baseDto.getURL() == null || baseDto.getRegion() == null)
             return  new ResponseEntity<>("Wrong server info! " + baseDto,HttpStatus.BAD_REQUEST);
         try {
 
             // Basically we have constraint on server URL, since it cannot be 2 servers with same url
-            res = gameServerDao.getServerByUrl(baseDto.getURL());
+            res = serverDao.getServerByUrl(baseDto.getURL());
             if(res ==null)
                 return  new ResponseEntity<>("Server URL not found! " + baseDto ,HttpStatus.BAD_REQUEST);
-            res.setActive(true);
-            res.setLastHeartbeat(System.currentTimeMillis());
-            res.setPlayersNumber(baseDto.getPlayersNumber());
 
-           gameServerDao.update(res);
+
+           serverDao.update(baseDto);
 
         }
         catch (Exception ex) {
@@ -68,7 +66,7 @@ public class GameServerController
     {
 
         try {
-            GameServerDto server  = gameServerDao.getServerToConnect(regionToPlay);
+            GameServerDto server  = serverDao.getServerToConnect(regionToPlay);
             if(server == null)
                 return new ResponseEntity<>("No active servers here: " + regionToPlay ,HttpStatus.INTERNAL_SERVER_ERROR);
             else  return new ResponseEntity<>(server, HttpStatus.OK);
@@ -84,7 +82,7 @@ public class GameServerController
     {
         List<GameServerDto> res;
         try {
-            res  = gameServerDao.getServersInRegion(regionToPlay);
+            res  = serverDao.getServersInRegion(regionToPlay);
         }
         catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
@@ -95,7 +93,7 @@ public class GameServerController
     @RequestMapping(value="/cheat", method = RequestMethod.GET)
     public ResponseEntity cheat() {
         try {
-            gameServerDao.fillDb();
+            serverDao.fillDb();
         }
         catch(Exception ex) {
             return new ResponseEntity<>(ex.getMessage() , HttpStatus.BAD_REQUEST);
@@ -107,7 +105,7 @@ public class GameServerController
     public ResponseEntity getAll() {
         List<GameServerDto> data = null;
         try {
-            data = gameServerDao.getAllServers();
+            data = serverDao.getAllServers();
         }
         catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);

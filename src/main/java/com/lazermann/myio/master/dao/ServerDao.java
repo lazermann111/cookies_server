@@ -1,10 +1,11 @@
 package com.lazermann.myio.master.dao;
 
-import com.lazermann.myio.master.dto.GameServerBaseDto;
 import com.lazermann.myio.master.dto.GameServerDto;
+import com.lazermann.myio.master.dto.HttpServerDto;
 import com.lazermann.myio.master.helpers.DozerHelper;
-import com.lazermann.myio.master.model.ClientException;
 import com.lazermann.myio.master.model.GameServer;
+import com.lazermann.myio.master.model.GameType;
+import com.lazermann.myio.master.model.HttpServer;
 import com.lazermann.myio.master.model.Region;
 import org.dozer.DozerBeanMapper;
 import org.hibernate.Session;
@@ -13,11 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 @Transactional
-public class GameServerDao {
+public class ServerDao {
     @Autowired
     private SessionFactory _sessionFactory;
 
@@ -29,22 +31,20 @@ public class GameServerDao {
     }
 
     public void fillDb() throws Exception {
-        GameServer a = new GameServer(Region.ASIA, 5, "asia1.com");
-        a.setActive(false);
-        getSession().save(a);
+
+        HttpServer localhost = new HttpServer
+                ("localhost:8000", Region.LOCALHOST, 0, GameType.SOLO, new ArrayList<>());
 
 
-        GameServer a2 = new GameServer(Region.ASIA, 15, "asia2.com");
-        getSession().save(a2);
+        GameServer a = new GameServer(localhost, true, 10,50);
+        GameServer b = new GameServer(localhost, false, 10,50);
+        GameServer c = new GameServer(localhost, true, 1,50);
 
-        GameServer a3 = new GameServer(Region.ASIA, 25, "asia2.com");
-        getSession().save(a3);
+        localhost.getGameServers().add(a);
+        localhost.getGameServers().add(b);
+        localhost.getGameServers().add(c);
 
-        GameServer eu = new GameServer(Region.EUROPE, 25, "EU1.com");
-        getSession().save(eu);
-
-        ClientException ex = new ClientException("Err", "app",11,12,Region.LOCALHOST);
-        getSession().save(ex);
+        getSession().save(localhost);
 
     }
 
@@ -72,14 +72,14 @@ public class GameServerDao {
         return DozerHelper.map(dozerMapper, servers, GameServerDto.class);
     }
 
-    public GameServer saveOrUpdate(GameServerBaseDto dto) throws Exception {
+    public HttpServer saveOrUpdate(HttpServerDto dto) throws Exception {
 
-        GameServer dbServer = getServerByUrl(dto.getURL());
+        HttpServer dbServer = getServerByUrl(dto.getURL());
         if(dbServer == null)
         {
-            GameServer res = dozerMapper.map(dto, GameServer.class);
-            res.setActive(true);
-            res.setLastHeartbeat(System.currentTimeMillis());
+            HttpServer res = dozerMapper.map(dto, HttpServer.class);
+
+
             getSession().save(res);
             return res;
         }
@@ -94,22 +94,31 @@ public class GameServerDao {
     }
 
     public void update(GameServer server) throws Exception {
-
-
         getSession().update(server);
-
-
     }
 
-    public GameServer getServerByUrl(String URL) {
-        return (GameServer) getSession().createQuery(
-                "from GameServer sever where sever.URL = :url")
+    public void update(HttpServerDto server) throws Exception {
+        //todo
+    }
+
+    public void update(HttpServer server) throws Exception {
+        getSession().update(server);
+    }
+
+
+    public HttpServer getServerByUrl(String URL) {
+        return (HttpServer) getSession().createQuery(
+                "from HttpServer server where server.URL = :url")
                 .setParameter("url", URL)
                 .uniqueResult();
     }
 
-    public GameServer getServerById(long id) {
+    public GameServer getGameServerById(long id) {
         return   getSession().get(GameServer.class, id);
+    }
+
+    public HttpServer getHttpServerById(long id) {
+        return   getSession().get(HttpServer.class, id);
     }
 
 }
