@@ -3,6 +3,7 @@ package com.lazermann.myio.master.dao;
 import com.lazermann.myio.master.dto.GameServerBaseDto;
 import com.lazermann.myio.master.dto.GameServerDto;
 import com.lazermann.myio.master.helpers.DozerHelper;
+import com.lazermann.myio.master.model.ClientException;
 import com.lazermann.myio.master.model.GameServer;
 import com.lazermann.myio.master.model.Region;
 import org.dozer.DozerBeanMapper;
@@ -42,6 +43,8 @@ public class GameServerDao {
         GameServer eu = new GameServer(Region.EUROPE, 25, "EU1.com");
         getSession().save(eu);
 
+        ClientException ex = new ClientException("Err", "app",11,12,Region.LOCALHOST);
+        getSession().save(ex);
 
     }
 

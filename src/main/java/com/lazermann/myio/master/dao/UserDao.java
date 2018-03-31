@@ -1,7 +1,9 @@
 package com.lazermann.myio.master.dao;
 
+import com.lazermann.myio.master.dto.ClientExceptionDto;
 import com.lazermann.myio.master.dto.UserDto;
 import com.lazermann.myio.master.helpers.DozerHelper;
+import com.lazermann.myio.master.model.ClientException;
 import com.lazermann.myio.master.model.User;
 import org.dozer.DozerBeanMapper;
 import org.hibernate.Session;
@@ -28,6 +30,12 @@ public class UserDao {
 
     public void save(User user) throws Exception {
         getSession().save(user);
+        //return;
+    }
+
+
+    public void saveClientException(ClientExceptionDto exceptionDto) throws Exception {
+        getSession().save(dozerMapper.map(exceptionDto, ClientException.class));
         //return;
     }
 

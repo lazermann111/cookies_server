@@ -1,11 +1,13 @@
 package com.lazermann.myio.master.controllers;
 
+import com.lazermann.myio.master.dto.ClientExceptionDto;
 import com.lazermann.myio.master.dto.UserDto;
 import com.lazermann.myio.master.model.User;
 import com.lazermann.myio.master.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +35,23 @@ public class UserController {
         return new ResponseEntity<>("Users created succesfully!",HttpStatus.CREATED);
 
     }
+
+    @RequestMapping(value="/postException", method = RequestMethod.POST)
+    public ResponseEntity postException(@RequestBody ClientExceptionDto exceptionDto) {
+        try {
+
+            if(exceptionDto.getErrorMessage() == null)
+                return new ResponseEntity<>("No exception body!" ,HttpStatus.BAD_REQUEST);
+
+            userService.saveClientException(exceptionDto);
+        }
+        catch(Exception ex) {
+            return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("",HttpStatus.CREATED);
+
+    }
+
 
     @RequestMapping(value="/getUser", method = RequestMethod.GET)
     public ResponseEntity getUser(String id) {

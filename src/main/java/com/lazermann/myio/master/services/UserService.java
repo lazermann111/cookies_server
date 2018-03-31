@@ -2,6 +2,7 @@ package com.lazermann.myio.master.services;
 
 
 import com.lazermann.myio.master.dao.UserDao;
+import com.lazermann.myio.master.dto.ClientExceptionDto;
 import com.lazermann.myio.master.dto.UserDto;
 import com.lazermann.myio.master.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,10 @@ public class UserService {
 
     public void save(User user) throws Exception {
         userDao.save(user);
+    }
+
+    public void saveClientException(ClientExceptionDto exceptionDto) throws Exception {
+        userDao.saveClientException(exceptionDto);
     }
 
     public List<UserDto> getAllUsers() {
