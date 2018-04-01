@@ -48,7 +48,13 @@ public class ServerDao {
         getSession().save(localhost);
 
     }
+    public void dropAllServersInfo()
+    {
+        getSession().createQuery("delete from HttpServer").executeUpdate();
+        getSession().createQuery("delete from GameServer").executeUpdate();
 
+
+    }
     @SuppressWarnings("unchecked")
     public List<HttpServerDto> getAllServers() {
         List<HttpServer> list = getSession().createQuery("from HttpServer").list();
@@ -99,6 +105,7 @@ public class ServerDao {
             res.setMaxPlayers(maxPlayers);
 
             getSession().save(res);
+            getSession().flush();
             return res;
         }
         else
@@ -125,6 +132,7 @@ public class ServerDao {
 
 
             getSession().update(dbServer);
+            getSession().flush();
             return dbServer;
         }
 
@@ -164,7 +172,7 @@ public class ServerDao {
         return (HttpServer) getSession().createQuery(
                 "from HttpServer server where server.URL = :url")
                 .setParameter("url", URL)
-                .uniqueResult();
+               .uniqueResult();
     }
 
     public GameServer getGameServerById(long id) {

@@ -113,4 +113,16 @@ public class ServerController
         }
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
+
+    @RequestMapping(value="/dropAll", method = RequestMethod.GET)
+    public ResponseEntity dropAll() {
+
+        try {
+             serverDao.dropAllServersInfo();
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Servers dropped successfully!", HttpStatus.OK);
+    }
 }
