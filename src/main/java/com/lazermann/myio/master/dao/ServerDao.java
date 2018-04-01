@@ -58,13 +58,17 @@ public class ServerDao {
     @SuppressWarnings("unchecked")
     public HttpServerDto getServerToConnect(Region region) {
         List<HttpServer> server =
-                getSession().createQuery("from HttpServer server where server.region = :r  ORDER BY server.totalPlayers")
+                getSession().createQuery("from HttpServer server where server.region = :r  ORDER BY server.totalPlayers desc")
                  .setParameter("r", region).list();
         if(server.isEmpty()) return null;
 
+        for (HttpServer s : server)
+        {
+            if(s.getTotalPlayers() < s.getMaxPlayers())
+                return   dozerMapper.map(s, HttpServerDto.class);
+        }
 
-
-        return dozerMapper.map(server.get(0), HttpServerDto.class);
+         return null;
     }
 
 
@@ -86,6 +90,7 @@ public class ServerDao {
             int maxPlayers = 0, totalPlayers =0;
             for (GameServer s :res.getGameServers())
             {
+                if(!s.isActive()) continue;
                 maxPlayers +=s.getMaxPlayersNumber();
                 totalPlayers +=s.getPlayersNumber();
             }
@@ -110,6 +115,7 @@ public class ServerDao {
             int maxPlayers = 0, totalPlayers =0;
             for (GameServer s : dbServer.getGameServers())
             {
+                if(!s.isActive()) continue;
                 maxPlayers +=s.getMaxPlayersNumber();
                 totalPlayers +=s.getPlayersNumber();
             }
