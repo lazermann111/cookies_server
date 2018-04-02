@@ -11,8 +11,8 @@ public class HttpServerBaseDto
     private Region region;
     private long lastHeartbeat;
     private GameType gameType;
-    private int playersNumber;
-    private int maxPlayersNumber;
+    private int totalPlayers;
+    private int maxPlayers;
     public HttpServerBaseDto(){}
 
     public HttpServerBaseDto(long id, String URL, Region region, long lastHeartbeat, GameType gameType) {
@@ -63,19 +63,19 @@ public class HttpServerBaseDto
         this.gameType = gameType;
     }
 
-    public int getPlayersNumber() {
-        return playersNumber;
+    public int getTotalPlayers() {
+        return totalPlayers;
     }
 
-    public void setPlayersNumber(int playersNumber) {
-        this.playersNumber = playersNumber;
+    public void setTotalPlayers(int totalPlayers) {
+        this.totalPlayers = totalPlayers;
     }
 
-    public int getMaxPlayersNumber() {
-        return maxPlayersNumber;
+    public int getMaxPlayers() {
+        return maxPlayers;
     }
 
-    public void setMaxPlayersNumber(int maxPlayersNumber) {
-        this.maxPlayersNumber = maxPlayersNumber;
+    public void setMaxPlayers(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
     }
 }

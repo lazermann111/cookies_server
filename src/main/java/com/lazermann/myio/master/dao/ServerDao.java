@@ -103,7 +103,7 @@ public class ServerDao {
 
             res.setTotalPlayers(totalPlayers);
             res.setMaxPlayers(maxPlayers);
-
+            res.setLastHeartbeat(System.currentTimeMillis());
             getSession().save(res);
             getSession().flush();
             return res;
@@ -126,7 +126,7 @@ public class ServerDao {
                 maxPlayers +=s.getMaxPlayersNumber();
                 totalPlayers +=s.getPlayersNumber();
             }
-
+            dbServer.setLastHeartbeat(System.currentTimeMillis());
             dbServer.setTotalPlayers(totalPlayers);
             dbServer.setMaxPlayers(maxPlayers);
 
@@ -146,13 +146,13 @@ public class ServerDao {
             {
                 if(s.getWorldId() == d.getWorldId())
                 {
-                    d.setMaxPlayersNumber(s.getMaxPlayersNumber());
+                    d.setPlayersNumber(s.getPlayersNumber());
                     d.setMaxPlayersNumber(s.getMaxPlayersNumber());
                 }
             }
         }
 
-        return dest;
+       return dest;
     }
 
     public void update(GameServer server) throws Exception {
