@@ -2,6 +2,7 @@ package com.lazermann.myio.master.controllers;
 
 import com.lazermann.myio.master.dao.ServerDao;
 import com.lazermann.myio.master.dto.GameServerDto;
+import com.lazermann.myio.master.dto.HttpServerBaseDto;
 import com.lazermann.myio.master.dto.HttpServerDto;
 import com.lazermann.myio.master.model.HttpServer;
 import com.lazermann.myio.master.model.Region;
@@ -22,22 +23,10 @@ public class ServerController
     @Autowired
     ServerDao serverDao;
 
-   /* @RequestMapping(value="/register", method = RequestMethod.POST)
-    public ResponseEntity registerNewServer(@RequestBody HttpServerDto baseDto)
-    {
-        HttpServer res;
-        if(baseDto.getURL() == null || baseDto.getRegion() == null)
-            return  new ResponseEntity<>("Wrong server info! "+ baseDto ,HttpStatus.BAD_REQUEST);
-        try {
-
-            res  = serverDao.saveOrUpdate(baseDto);
-        }
-        catch (Exception ex) {
-            return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(res, HttpStatus.CREATED);
-    }*/
-
+    /*
+    *  Called from each server in a some period, like 5-10 sec
+    *  contains actual server state.
+    */
     @RequestMapping(value="/heartbeat", method = RequestMethod.POST)
     public ResponseEntity heartBeat(@RequestBody HttpServerDto baseDto)
     {
@@ -47,11 +36,6 @@ public class ServerController
         try {
 
             // Basically we have constraint on server URL, since it cannot be 2 servers with same url
-           /* res = serverDao.getServerByUrl(baseDto.getURL());
-            if(res ==null)
-                return  new ResponseEntity<>("Server URL not found! " + baseDto ,HttpStatus.BAD_REQUEST);*/
-
-
            serverDao.saveOrUpdate(baseDto);
 
         }
@@ -78,6 +62,43 @@ public class ServerController
 
     }
 
+    /*
+     *  Called in MainMenuScreen of client
+     *  @return List of all active non-full servers, sorted by players number DESC
+     */
+    @RequestMapping(value="/getServersForAllRegions", method = RequestMethod.GET)
+    public ResponseEntity getServersForAllRegions()
+    {
+        List<HttpServerBaseDto> res;
+        try {
+            res  = serverDao.getServersForAllRegions();
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    /*
+        * Used for quick cleanup of database, to avoid situation of duplicated HttpServer infos
+        * Doesn't harm our logic, since active servers have to send updates quite often,
+        * so new info will be in 5-10 sec
+        */
+    @RequestMapping(value="/dropAll", method = RequestMethod.GET)
+    public ResponseEntity dropAll() {
+
+        try {
+            serverDao.dropAllServersInfo();
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Servers dropped successfully!", HttpStatus.OK);
+    }
+
+    /*
+    *  Returns List of all active  servers in given region
+    */
     @RequestMapping(value="/getServers", method = RequestMethod.GET)
     public ResponseEntity getAllServersInRegion(Region regionToPlay)
     {
@@ -114,15 +135,5 @@ public class ServerController
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-    @RequestMapping(value="/dropAll", method = RequestMethod.GET)
-    public ResponseEntity dropAll() {
 
-        try {
-             serverDao.dropAllServersInfo();
-        }
-        catch (Exception ex) {
-            return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>("Servers dropped successfully!", HttpStatus.OK);
-    }
 }

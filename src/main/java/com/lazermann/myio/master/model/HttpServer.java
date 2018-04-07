@@ -17,6 +17,7 @@ public class HttpServer {
     private Region region;
     private long lastHeartbeat;
     private GameType gameType;
+    private boolean active;
 
 
     @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
@@ -100,5 +101,14 @@ public class HttpServer {
 
     public void setMaxPlayers(long maxPlayers) {
         this.maxPlayers = maxPlayers;
+    }
+
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

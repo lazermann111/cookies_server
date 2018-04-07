@@ -1,6 +1,7 @@
 package com.lazermann.myio.master.dao;
 
 import com.lazermann.myio.master.dto.GameServerDto;
+import com.lazermann.myio.master.dto.HttpServerBaseDto;
 import com.lazermann.myio.master.dto.HttpServerDto;
 import com.lazermann.myio.master.helpers.DozerHelper;
 import com.lazermann.myio.master.model.GameServer;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @Transactional
@@ -62,6 +64,12 @@ public class ServerDao {
     }
 
     @SuppressWarnings("unchecked")
+    public List<HttpServer> getAllServersEntities() {
+       return ( List<HttpServer>) getSession().createQuery("from HttpServer").list();
+
+    }
+
+    @SuppressWarnings("unchecked")
     public HttpServerDto getServerToConnect(Region region) {
         List<HttpServer> server =
                 getSession().createQuery("from HttpServer server where server.region = :r  ORDER BY server.totalPlayers desc")
@@ -75,6 +83,20 @@ public class ServerDao {
         }
 
          return null;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public List<HttpServerBaseDto> getServersForAllRegions() {
+        List<HttpServer> res =
+                getSession().createQuery("from HttpServer server where server.active is true  " +
+                        "ORDER BY server.totalPlayers desc")
+                        .list();
+        if(res.isEmpty()) return null;
+
+        //todo add some distinct for returning only 1 server for pair<Region,GameType>
+        List<HttpServer> r =  res.stream().filter(s -> s.getTotalPlayers() < s.getMaxPlayers()).collect(Collectors.toList());
+        return DozerHelper.map(dozerMapper, r, HttpServerBaseDto.class);
     }
 
 
@@ -104,6 +126,7 @@ public class ServerDao {
             res.setTotalPlayers(totalPlayers);
             res.setMaxPlayers(maxPlayers);
             res.setLastHeartbeat(System.currentTimeMillis());
+            res.setActive(true);
             getSession().save(res);
             getSession().flush();
             return res;
@@ -129,7 +152,7 @@ public class ServerDao {
             dbServer.setLastHeartbeat(System.currentTimeMillis());
             dbServer.setTotalPlayers(totalPlayers);
             dbServer.setMaxPlayers(maxPlayers);
-
+            dbServer.setActive(true);
 
             getSession().update(dbServer);
             getSession().flush();
@@ -165,6 +188,7 @@ public class ServerDao {
 
     public void update(HttpServer server) throws Exception {
         getSession().update(server);
+        getSession().flush();
     }
 
 
