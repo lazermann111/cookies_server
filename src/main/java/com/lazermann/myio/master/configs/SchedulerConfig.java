@@ -13,7 +13,7 @@ public class SchedulerConfig {
 
     @Bean
     public JobDetail sampleJobDetail() {
-        return JobBuilder.newJob(UpdateServerStatusJob.class).build();
+        return JobBuilder.newJob(UpdateServerStatusJob.class).storeDurably().build();
     }
 
     @Bean

@@ -27,6 +27,7 @@ public class GameServer {
     private int playersNumber;
     private int maxPlayersNumber;
     private int worldId;
+    private GameServerState serverState;
 
 
     public int getWorldId() {
@@ -73,6 +74,11 @@ public class GameServer {
     }
 
 
+    public GameServerState getServerState() {
+        return serverState;
+    }
 
-
+    public void setServerState(GameServerState serverState) {
+        this.serverState = serverState;
+    }
 }

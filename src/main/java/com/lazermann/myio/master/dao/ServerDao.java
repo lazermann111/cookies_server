@@ -4,10 +4,7 @@ import com.lazermann.myio.master.dto.GameServerDto;
 import com.lazermann.myio.master.dto.HttpServerBaseDto;
 import com.lazermann.myio.master.dto.HttpServerDto;
 import com.lazermann.myio.master.helpers.DozerHelper;
-import com.lazermann.myio.master.model.GameServer;
-import com.lazermann.myio.master.model.GameType;
-import com.lazermann.myio.master.model.HttpServer;
-import com.lazermann.myio.master.model.Region;
+import com.lazermann.myio.master.model.*;
 import org.dozer.DozerBeanMapper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -83,6 +80,35 @@ public class ServerDao {
         }
 
          return null;
+    }
+
+  /*
+   * Used for team matchmaking
+   */
+    public HttpServerDto getServerToConnect(Region region, GameType type) {
+        List<HttpServer> server =
+                getSession().createQuery("from HttpServer server where server.region = :r and server.gameType = :t  ORDER BY server.totalPlayers desc")
+                        .setParameter("r", region)
+                        .setParameter("t", type)
+                        .list();
+        if(server.isEmpty()) return null;
+
+        for (HttpServer s : server)
+        {
+            boolean found = false;
+            for (GameServer gameServer : s.getGameServers())
+            {
+                // need to check if server is active, and waiting for more players
+                if(gameServer.isActive() &&  (gameServer.getServerState().equals(GameServerState.WAITING_FOR_PLAYERS)
+                        || gameServer.getServerState().equals(GameServerState.WARMUP)))
+                    found = true;
+            }
+
+            if(s.getTotalPlayers() < s.getMaxPlayers() && found)
+                return  dozerMapper.map(s, HttpServerDto.class);
+        }
+
+        return null;
     }
 
 

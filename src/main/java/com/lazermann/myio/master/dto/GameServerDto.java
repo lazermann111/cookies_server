@@ -1,12 +1,16 @@
 package com.lazermann.myio.master.dto;
 
 
+import com.lazermann.myio.master.model.GameServerState;
+
 public class GameServerDto   {
+
     private boolean active;
     private int playersNumber;
     private int maxPlayersNumber;
 
     private int worldId;
+    private GameServerState serverState;
 
 
     public int getWorldId() {
@@ -20,7 +24,13 @@ public class GameServerDto   {
     public GameServerDto() {
     }
 
-
+    public GameServerDto(boolean active, int playersNumber, int maxPlayersNumber, int worldId,  GameServerState s) {
+        this.active = active;
+        this.playersNumber = playersNumber;
+        this.maxPlayersNumber = maxPlayersNumber;
+        this.worldId = worldId;
+        serverState = s;
+    }
 
     public boolean isActive() {
         return active;
@@ -44,6 +54,14 @@ public class GameServerDto   {
 
     public void setMaxPlayersNumber(int maxPlayersNumber) {
         this.maxPlayersNumber = maxPlayersNumber;
+    }
+
+    public GameServerState getServerState() {
+        return serverState;
+    }
+
+    public void setServerState(GameServerState serverState) {
+        this.serverState = serverState;
     }
 }
 
