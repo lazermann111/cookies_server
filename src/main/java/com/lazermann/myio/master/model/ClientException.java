@@ -11,13 +11,13 @@ public class ClientException {
 
     String errorMessage;
     String methodName;
-    long timestamp;
-    long clientId;
+    String timestamp;
+    String clientId;
     Region region;
 
     public ClientException(){}
 
-    public ClientException(String errorMessage, String methodName, long timestamp, long clientId, Region region) {
+    public ClientException(String errorMessage, String methodName, String timestamp, String clientId, Region region) {
         this.errorMessage = errorMessage;
         this.methodName = methodName;
         this.timestamp = timestamp;
@@ -42,11 +42,11 @@ public class ClientException {
         this.methodName = methodName;
     }
 
-    public long getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -58,11 +58,11 @@ public class ClientException {
         this.region = region;
     }
 
-    public long getClientId() {
+    public String getClientId() {
         return clientId;
     }
 
-    public void setClientId(long clientId) {
+    public void setClientId(String clientId) {
         this.clientId = clientId;
     }
 
