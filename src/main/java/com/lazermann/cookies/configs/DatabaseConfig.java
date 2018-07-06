@@ -1,4 +1,4 @@
-package com.lazermann.myio.master.configs;
+package com.lazermann.cookies.configs;
 
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Value;

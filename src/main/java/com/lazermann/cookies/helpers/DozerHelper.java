@@ -1,4 +1,4 @@
-package com.lazermann.myio.master.helpers;
+package com.lazermann.cookies.helpers;
 
 
 import org.dozer.Mapper;
