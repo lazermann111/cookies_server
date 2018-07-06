@@ -50,6 +50,7 @@ public class Dao {
                 .setParameter("proxy", proxy)
                 .uniqueResult();
 
+        if(res == null) return null;
         return dozerMapper.map(res, CookieInfoDto.class);
     }
 
@@ -62,7 +63,7 @@ public class Dao {
         return dozerMapper.map(res, YtCounterDto.class);
     }
 
-    public void increaseYtCounter(String url) {
+    public long increaseYtCounter(String url) {
         YtCounter res = (YtCounter) getSession().createQuery(
                 "from YtCounter c where c.videoURL = :videoURL")
                 .setParameter("videoURL", url)
@@ -75,11 +76,14 @@ public class Dao {
             res.setVideoURL(url);
 
             getSession().save(res);
+            return 1;
         }
         else
         {
-          res.setCounter(res.getCounter()+1);
+          long c = res.getCounter()+1;
+          res.setCounter(c);
           getSession().update(res);
+          return c;
         }
     }
 

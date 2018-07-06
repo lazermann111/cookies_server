@@ -28,6 +28,11 @@ public class Controller {
     public ResponseEntity create(String proxy, String cookie) {
         try
         {
+            CookieInfoDto c = dao.getCookieByProxy(proxy);
+            if(c != null)
+            {
+
+            }
             CookieInfo cookieInfo = new CookieInfo();
             cookieInfo.setCookie(cookie);
             cookieInfo.setProxy(proxy);
@@ -37,7 +42,7 @@ public class Controller {
         catch(Exception ex) {
             return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Cookies added succesfully!",HttpStatus.CREATED);
+        return new ResponseEntity<>("Cookies added succesfully!",HttpStatus.OK);
 
     }
 
@@ -57,7 +62,7 @@ public class Controller {
         catch(Exception ex) {
             return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(c,HttpStatus.CREATED);
+        return new ResponseEntity<>(c,HttpStatus.OK);
 
     }
 
@@ -73,7 +78,7 @@ public class Controller {
         catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(data, HttpStatus.CREATED);
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
 
@@ -88,21 +93,21 @@ public class Controller {
         catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(res, HttpStatus.CREATED);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @RequestMapping(value="/increaseCounter", method = RequestMethod.GET)
     public ResponseEntity increaseCounter(String url) {
-
+        Long counter = -1l;
         try
         {
-           dao.increaseYtCounter(url);
+            counter  =   dao.increaseYtCounter(url);
 
         }
         catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+        return new ResponseEntity<>(counter, HttpStatus.OK);
     }
 
 
