@@ -43,6 +43,21 @@ public class Dao {
         //return;
     }
 
+    public void updateCookie(String proxy, String coockie) {
+
+        CookieInfo res = (CookieInfo) getSession().createQuery(
+                "from CookieInfo c where c.proxy = :proxy")
+                .setParameter("proxy", proxy)
+                .uniqueResult();
+
+        if(res != null)
+        {
+            res.setCookie(coockie);
+            getSession().update(res);
+        }
+
+    }
+
     @SuppressWarnings("unchecked")
     public CookieInfoDto getCookieByProxy(String proxy) {
         CookieInfo res = (CookieInfo) getSession().createQuery(
@@ -102,7 +117,7 @@ public class Dao {
     }
 
 
-    public void update(CookieInfo coockieInfo) {
+    public void updateCookie(CookieInfo coockieInfo) {
         getSession().update(coockieInfo);
         return;
     }

@@ -31,13 +31,18 @@ public class Controller {
             CookieInfoDto c = dao.getCookieByProxy(proxy);
             if(c != null)
             {
+                dao.updateCookie(proxy, cookie);
 
             }
-            CookieInfo cookieInfo = new CookieInfo();
-            cookieInfo.setCookie(cookie);
-            cookieInfo.setProxy(proxy);
+            else
+            {
+                CookieInfo cookieInfo = new CookieInfo();
+                cookieInfo.setCookie(cookie);
+                cookieInfo.setProxy(proxy);
 
-            dao.save(cookieInfo);
+                dao.save(cookieInfo);
+            }
+
         }
         catch(Exception ex) {
             return new ResponseEntity<>(ex.getMessage() ,HttpStatus.BAD_REQUEST);
